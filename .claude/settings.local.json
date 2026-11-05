@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(where msbuild *)",
+      "Bash(where dotnet *)",
+      "Bash(where mysql *)",
+      "Bash(where nuget *)",
+      "Bash(dotnet --version)",
+      "Bash(dotnet --list-sdks)",
+      "Bash(dotnet build *)",
+      "Read(//c/Windows/Microsoft.NET/**)",
+      "Read(//c/Program Files/dotnet/sdk/**)",
+      "Bash(/c/Program Files \\(x86\\)/Microsoft Visual Studio/Installer/vswhere.exe *)"
+    ]
+  }
+}
