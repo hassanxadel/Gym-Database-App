@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Data;
 using MySql.Data.MySqlClient;
 using System.Windows.Forms;
@@ -7,8 +8,11 @@ namespace GymMembershipSystem.DataAccess
 {
     public class DatabaseHelper
     {
-        // Update the password to match your MySQL root password
-        private readonly string connectionString = "Server=localhost;Database=GymMembershipSystem;Uid=root;Pwd=root123;";
+        // Connection string lives in App.config (connectionStrings/GymDb) so it can be
+        // changed without recompiling. Falls back to the original default if missing.
+        private readonly string connectionString =
+            ConfigurationManager.ConnectionStrings["GymDb"]?.ConnectionString
+            ?? "Server=localhost;Database=GymMembershipSystem;Uid=root;Pwd=root123;";
 
         // Method to open a connection
         public MySqlConnection GetConnection()
@@ -17,7 +21,7 @@ namespace GymMembershipSystem.DataAccess
         }
 
         // Helper method specifically for SELECT queries (Viewing Data)
-        public DataTable ExecuteSelect(string query)
+        public DataTable ExecuteSelect(string query, params MySqlParameter[] parameters)
         {
             DataTable dataTable = new DataTable();
             try
@@ -27,6 +31,7 @@ namespace GymMembershipSystem.DataAccess
                     conn.Open();
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
+                        if (parameters != null) cmd.Parameters.AddRange(parameters);
                         using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
                         {
                             adapter.Fill(dataTable);
@@ -42,7 +47,7 @@ namespace GymMembershipSystem.DataAccess
         }
 
         // Helper method for INSERT, UPDATE, and DELETE queries
-        public bool ExecuteAction(string query)
+        public bool ExecuteAction(string query, params MySqlParameter[] parameters)
         {
             try
             {
@@ -51,6 +56,7 @@ namespace GymMembershipSystem.DataAccess
                     conn.Open();
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
+                        if (parameters != null) cmd.Parameters.AddRange(parameters);
                         int rowsAffected = cmd.ExecuteNonQuery();
                         return rowsAffected > 0;
                     }

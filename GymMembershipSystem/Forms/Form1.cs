@@ -1,4 +1,5 @@
 ﻿using GymMembershipSystem.DataAccess;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GymMembershipSystem.DataAccess;
 
 namespace GymMembershipSystem
 {
@@ -17,6 +17,7 @@ namespace GymMembershipSystem
         public Form1()
         {
             InitializeComponent();
+            UiTheme.Apply(this);
         }
 
         private void btnLoadMembers_Click(object sender, EventArgs e)
@@ -45,13 +46,19 @@ namespace GymMembershipSystem
             string dob = dtpDOB.Value.ToString("yyyy-MM-dd");
             string joinDate = dtpJoinDate.Value.ToString("yyyy-MM-dd");
 
-            // 2. Build the exact INSERT SQL query
-            string query = $"INSERT INTO MEMBER (FName, LName, Email, Phone, DateOfBirth, JoinDate) " +
-                           $"VALUES ('{fName}', '{lName}', '{email}', '{phone}', '{dob}', '{joinDate}');";
+            // 2. Build the parameterized INSERT SQL query (avoids SQL injection)
+            string query = "INSERT INTO MEMBER (FName, LName, Email, Phone, DateOfBirth, JoinDate) " +
+                           "VALUES (@fName, @lName, @email, @phone, @dob, @joinDate);";
 
             // 3. Connect to the database and execute the query
             DatabaseHelper db = new DatabaseHelper();
-            bool success = db.ExecuteAction(query);
+            bool success = db.ExecuteAction(query,
+                new MySqlParameter("@fName", fName),
+                new MySqlParameter("@lName", lName),
+                new MySqlParameter("@email", email),
+                new MySqlParameter("@phone", phone),
+                new MySqlParameter("@dob", dob),
+                new MySqlParameter("@joinDate", joinDate));
 
             // 4. If it worked, tell the user and refresh the grid!
             if (success)
@@ -86,12 +93,12 @@ namespace GymMembershipSystem
 
                 if (result == DialogResult.Yes)
                 {
-                    // 4. Write the SQL DELETE query
-                    string query = $"DELETE FROM MEMBER WHERE MemberID = {selectedId};";
+                    // 4. Write the parameterized SQL DELETE query
+                    string query = "DELETE FROM MEMBER WHERE MemberID = @id;";
 
                     // 5. Execute it using your helper class
                     DatabaseHelper db = new DatabaseHelper();
-                    bool success = db.ExecuteAction(query);
+                    bool success = db.ExecuteAction(query, new MySqlParameter("@id", selectedId));
 
                     if (success)
                     {
@@ -149,19 +156,26 @@ namespace GymMembershipSystem
                 string dob = dtpDOB.Value.ToString("yyyy-MM-dd");
                 string joinDate = dtpJoinDate.Value.ToString("yyyy-MM-dd");
 
-                // 4. Build the SQL UPDATE query
-                string query = $"UPDATE MEMBER SET " +
-                               $"FName = '{fName}', " +
-                               $"LName = '{lName}', " +
-                               $"Email = '{email}', " +
-                               $"Phone = '{phone}', " +
-                               $"DateOfBirth = '{dob}', " +
-                               $"JoinDate = '{joinDate}' " +
-                               $"WHERE MemberID = {selectedId};";
+                // 4. Build the parameterized SQL UPDATE query
+                string query = "UPDATE MEMBER SET " +
+                               "FName = @fName, " +
+                               "LName = @lName, " +
+                               "Email = @email, " +
+                               "Phone = @phone, " +
+                               "DateOfBirth = @dob, " +
+                               "JoinDate = @joinDate " +
+                               "WHERE MemberID = @id;";
 
                 // 5. Execute the update
                 DatabaseHelper db = new DatabaseHelper();
-                bool success = db.ExecuteAction(query);
+                bool success = db.ExecuteAction(query,
+                    new MySqlParameter("@fName", fName),
+                    new MySqlParameter("@lName", lName),
+                    new MySqlParameter("@email", email),
+                    new MySqlParameter("@phone", phone),
+                    new MySqlParameter("@dob", dob),
+                    new MySqlParameter("@joinDate", joinDate),
+                    new MySqlParameter("@id", selectedId));
 
                 // 6. Refresh the grid to show the changes
                 if (success)
@@ -182,5 +196,5 @@ namespace GymMembershipSystem
             }
         }
     }
-    }
-    
+}
+

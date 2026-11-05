@@ -206,7 +206,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dgvTrainers);
             this.Name = "TrainerForm";
-            this.Text = "Form2";
+            this.Text = "Manage Trainers";
             ((System.ComponentModel.ISupportInitialize)(this.dgvTrainers)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

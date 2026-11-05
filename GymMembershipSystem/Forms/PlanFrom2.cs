@@ -1,4 +1,5 @@
 ﻿using GymMembershipSystem.DataAccess;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,7 @@ namespace GymMembershipSystem.Forms
         public PlanFrom2()
         {
             InitializeComponent();
+            UiTheme.Apply(this);
         }
 
         private void btnAddPlan_Click(object sender, EventArgs e)
@@ -25,11 +27,15 @@ namespace GymMembershipSystem.Forms
             string monthlyFee = nudMonthlyFee.Value.ToString();
             string durationDays = nudDurationDays.Value.ToString();
 
-            string query = $"INSERT INTO PLAN (PlanName, Description, MonthlyFee, DurationDays) " +
-                           $"VALUES ('{planName}', '{description}', {monthlyFee}, {durationDays});";
+            string query = "INSERT INTO PLAN (PlanName, Description, MonthlyFee, DurationDays) " +
+                           "VALUES (@planName, @description, @monthlyFee, @durationDays);";
 
             DatabaseHelper db = new DatabaseHelper();
-            if (db.ExecuteAction(query))
+            if (db.ExecuteAction(query,
+                new MySqlParameter("@planName", planName),
+                new MySqlParameter("@description", description),
+                new MySqlParameter("@monthlyFee", monthlyFee),
+                new MySqlParameter("@durationDays", durationDays)))
             {
                 MessageBox.Show("Plan added successfully!");
                 dgvPlans.DataSource = db.ExecuteSelect("SELECT * FROM PLAN;");
@@ -74,13 +80,18 @@ namespace GymMembershipSystem.Forms
                 string monthlyFee = nudMonthlyFee.Value.ToString();
                 string durationDays = nudDurationDays.Value.ToString();
 
-                string query = $"UPDATE PLAN SET " +
-                               $"PlanName = '{planName}', Description = '{description}', " +
-                               $"MonthlyFee = {monthlyFee}, DurationDays = {durationDays} " +
-                               $"WHERE PlanID = {selectedId};";
+                string query = "UPDATE PLAN SET " +
+                               "PlanName = @planName, Description = @description, " +
+                               "MonthlyFee = @monthlyFee, DurationDays = @durationDays " +
+                               "WHERE PlanID = @id;";
 
                 DatabaseHelper db = new DatabaseHelper();
-                if (db.ExecuteAction(query))
+                if (db.ExecuteAction(query,
+                    new MySqlParameter("@planName", planName),
+                    new MySqlParameter("@description", description),
+                    new MySqlParameter("@monthlyFee", monthlyFee),
+                    new MySqlParameter("@durationDays", durationDays),
+                    new MySqlParameter("@id", selectedId)))
                 {
                     MessageBox.Show("Plan updated successfully!");
                     dgvPlans.DataSource = db.ExecuteSelect("SELECT * FROM PLAN;");
@@ -98,9 +109,9 @@ namespace GymMembershipSystem.Forms
 
                 if (result == DialogResult.Yes)
                 {
-                    string query = $"DELETE FROM PLAN WHERE PlanID = {selectedId};";
+                    string query = "DELETE FROM PLAN WHERE PlanID = @id;";
                     DatabaseHelper db = new DatabaseHelper();
-                    if (db.ExecuteAction(query))
+                    if (db.ExecuteAction(query, new MySqlParameter("@id", selectedId)))
                     {
                         MessageBox.Show("Plan deleted!");
                         dgvPlans.DataSource = db.ExecuteSelect("SELECT * FROM PLAN;");

@@ -215,7 +215,7 @@
             this.Controls.Add(this.btnLoadEnrollments);
             this.Controls.Add(this.dgvEnrollments);
             this.Name = "EnrollmentForm";
-            this.Text = "EnrollmentForm";
+            this.Text = "Manage Enrollments";
             ((System.ComponentModel.ISupportInitialize)(this.dgvEnrollments)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMemberReference)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClassReference)).EndInit();

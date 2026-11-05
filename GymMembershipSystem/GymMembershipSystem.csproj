@@ -151,6 +151,7 @@
       <DependentUpon>MainMenu.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="UiTheme.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\ClassForm.resx">
       <DependentUpon>ClassForm.cs</DependentUpon>

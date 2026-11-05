@@ -241,7 +241,7 @@
             this.Controls.Add(this.btnLoadMembers);
             this.Controls.Add(this.dgvData);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Manage Members";
             ((System.ComponentModel.ISupportInitialize)(this.dgvData)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

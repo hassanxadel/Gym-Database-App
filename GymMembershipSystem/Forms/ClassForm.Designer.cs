@@ -304,7 +304,7 @@
             this.Controls.Add(this.btnLoadClasses);
             this.Controls.Add(this.dgvClasses);
             this.Name = "ClassForm";
-            this.Text = "Form2";
+            this.Text = "Manage Classes";
             ((System.ComponentModel.ISupportInitialize)(this.dgvClasses)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTrainerReference)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRoomReference)).EndInit();

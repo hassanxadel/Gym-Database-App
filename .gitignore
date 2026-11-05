@@ -3,3 +3,6 @@
 .vs/
 *.user
 *.suo
+
+# Contains a local MySQL password - copy App.config.example instead
+GymMembershipSystem/App.config

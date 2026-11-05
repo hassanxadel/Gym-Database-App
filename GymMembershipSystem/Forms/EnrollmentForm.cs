@@ -1,4 +1,5 @@
 ﻿using GymMembershipSystem.DataAccess;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,7 @@ namespace GymMembershipSystem.Forms
         public EnrollmentForm()
         {
             InitializeComponent();
+            UiTheme.Apply(this);
             LoadReferenceLists();
         }
 
@@ -26,11 +28,14 @@ namespace GymMembershipSystem.Forms
 
             string enrollmentDate = dtpEnrollmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
 
-            string query = $"INSERT INTO ENROLLMENT (MemberID, ClassID, EnrollmentDate) " +
-                           $"VALUES ({memberId}, {classId}, '{enrollmentDate}');";
+            string query = "INSERT INTO ENROLLMENT (MemberID, ClassID, EnrollmentDate) " +
+                           "VALUES (@memberId, @classId, @enrollmentDate);";
 
             DatabaseHelper db = new DatabaseHelper();
-            if (db.ExecuteAction(query))
+            if (db.ExecuteAction(query,
+                new MySqlParameter("@memberId", memberId),
+                new MySqlParameter("@classId", classId),
+                new MySqlParameter("@enrollmentDate", enrollmentDate)))
             {
                 MessageBox.Show("Enrollment logged successfully!");
                 dgvEnrollments.DataSource = db.ExecuteSelect("SELECT * FROM ENROLLMENT;");
@@ -70,13 +75,17 @@ namespace GymMembershipSystem.Forms
                 string classId = txtClassID.Text;
                 string enrollmentDate = dtpEnrollmentDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
 
-                string query = $"UPDATE ENROLLMENT SET " +
-                               $"MemberID = {memberId}, ClassID = {classId}, " +
-                               $"EnrollmentDate = '{enrollmentDate}' " +
-                               $"WHERE EnrollmentID = {selectedId};";
+                string query = "UPDATE ENROLLMENT SET " +
+                               "MemberID = @memberId, ClassID = @classId, " +
+                               "EnrollmentDate = @enrollmentDate " +
+                               "WHERE EnrollmentID = @id;";
 
                 DatabaseHelper db = new DatabaseHelper();
-                if (db.ExecuteAction(query))
+                if (db.ExecuteAction(query,
+                    new MySqlParameter("@memberId", memberId),
+                    new MySqlParameter("@classId", classId),
+                    new MySqlParameter("@enrollmentDate", enrollmentDate),
+                    new MySqlParameter("@id", selectedId)))
                 {
                     MessageBox.Show("Enrollment updated successfully!");
                     dgvEnrollments.DataSource = db.ExecuteSelect("SELECT * FROM ENROLLMENT;");
@@ -94,9 +103,9 @@ namespace GymMembershipSystem.Forms
 
                 if (result == DialogResult.Yes)
                 {
-                    string query = $"DELETE FROM ENROLLMENT WHERE EnrollmentID = {selectedId};";
+                    string query = "DELETE FROM ENROLLMENT WHERE EnrollmentID = @id;";
                     DatabaseHelper db = new DatabaseHelper();
-                    if (db.ExecuteAction(query))
+                    if (db.ExecuteAction(query, new MySqlParameter("@id", selectedId)))
                     {
                         MessageBox.Show("Enrollment deleted!");
                         dgvEnrollments.DataSource = db.ExecuteSelect("SELECT * FROM ENROLLMENT;");

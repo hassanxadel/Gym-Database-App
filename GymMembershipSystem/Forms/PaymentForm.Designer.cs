@@ -236,7 +236,7 @@
             this.Controls.Add(this.btnLoadPayments);
             this.Controls.Add(this.dgvPayments);
             this.Name = "PaymentForm";
-            this.Text = "Form2";
+            this.Text = "Manage Payments";
             ((System.ComponentModel.ISupportInitialize)(this.dgvPayments)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMemberReference)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlanReference)).EndInit();

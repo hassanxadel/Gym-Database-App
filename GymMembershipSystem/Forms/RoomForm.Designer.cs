@@ -187,7 +187,7 @@
             this.Controls.Add(this.btnLoadRooms);
             this.Controls.Add(this.dgvRooms);
             this.Name = "RoomForm";
-            this.Text = "Form2";
+            this.Text = "Manage Rooms";
             ((System.ComponentModel.ISupportInitialize)(this.nudCapacity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRooms)).EndInit();
             this.ResumeLayout(false);

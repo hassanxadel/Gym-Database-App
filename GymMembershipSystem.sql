@@ -127,7 +127,7 @@ INSERT INTO MEMBER (FName, LName, Email, Phone, DateOfBirth, JoinDate) VALUES
 ('Dina', 'Ramadan', 'dina.ramadan@email.com', '01290123456', '1996-04-06', '2023-08-01'),
 ('Tamer', 'Gaber', 'tamer.gaber@email.com', '01101234567', '1987-02-19', '2023-09-10'),
 ('Reem', 'Adel', 'reem.adel@email.com', '01001234567', '2001-10-05', '2023-10-22');
-\
+
 INSERT INTO TRAINER (FName, LName, Email, Phone, Level) VALUES
 ('Mahmoud', 'Sayed', 'mahmoud.sayed@o2gym.com', '01001111111', 'Senior'),
 ('Rania', 'Fathi', 'rania.fathi@o2gym.com', '01002222222', 'Pro'),     
@@ -136,7 +136,6 @@ INSERT INTO TRAINER (FName, LName, Email, Phone, Level) VALUES
 ('Hossam', 'Tarek', 'hossam.tarek@o2gym.com', '01005555555', 'Senior'),
 ('Noha', 'Badr', 'noha.badr@o2gym.com', '01006666666', 'Mid-Level');
 
-=
 INSERT INTO ROOM (RoomName, Activity, Capacity) VALUES
 ('Main Hall', 'General Fitness', 40),   
 ('Cardio Zone', 'Cardio', 30),          

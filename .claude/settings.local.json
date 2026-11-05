@@ -10,7 +10,17 @@
       "Bash(dotnet build *)",
       "Read(//c/Windows/Microsoft.NET/**)",
       "Read(//c/Program Files/dotnet/sdk/**)",
-      "Bash(/c/Program Files \\(x86\\)/Microsoft Visual Studio/Installer/vswhere.exe *)"
+      "Bash(/c/Program Files \\(x86\\)/Microsoft Visual Studio/Installer/vswhere.exe *)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" GymMembershipSystem.sln /t:Rebuild /p:Configuration=Debug /nologo)",
+      "Bash(MSYS_NO_PATHCONV=1 \"/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" GymMembershipSystem.sln -t:Rebuild -p:Configuration=Debug -nologo)",
+      "Bash(MSYS_NO_PATHCONV=1 cmd.exe /c \"start GymMembershipSystem.exe\")",
+      "Bash(tasklist)",
+      "Bash(taskkill //IM GymMembershipSystem.exe //F)",
+      "Bash(git add *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(gh auth *)",
+      "Bash(gh repo *)",
+      "Bash(git commit *)"
     ]
   }
 }

@@ -1,4 +1,5 @@
 ﻿using GymMembershipSystem.DataAccess;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,7 @@ namespace GymMembershipSystem.Forms
         public PaymentForm()
         {
             InitializeComponent();
+            UiTheme.Apply(this);
             LoadReferenceLists();
         }
 
@@ -33,11 +35,15 @@ namespace GymMembershipSystem.Forms
 
             string paymentDate = dtpPaymentDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
 
-            string query = $"INSERT INTO PAYMENT (MemberID, PlanID, PaymentDate, Amount) " +
-                           $"VALUES ({memberId}, {planId}, '{paymentDate}', {amount});";
+            string query = "INSERT INTO PAYMENT (MemberID, PlanID, PaymentDate, Amount) " +
+                           "VALUES (@memberId, @planId, @paymentDate, @amount);";
 
             DatabaseHelper db = new DatabaseHelper();
-            if (db.ExecuteAction(query))
+            if (db.ExecuteAction(query,
+                new MySqlParameter("@memberId", memberId),
+                new MySqlParameter("@planId", planId),
+                new MySqlParameter("@paymentDate", paymentDate),
+                new MySqlParameter("@amount", amount)))
             {
                 MessageBox.Show("Payment logged successfully!");
                 dgvPayments.DataSource = db.ExecuteSelect("SELECT * FROM PAYMENT;");
@@ -73,13 +79,18 @@ namespace GymMembershipSystem.Forms
                 string amount = txtAmount.Text;
                 string paymentDate = dtpPaymentDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
 
-                string query = $"UPDATE PAYMENT SET " +
-                               $"MemberID = {memberId}, PlanID = {planId}, " +
-                               $"PaymentDate = '{paymentDate}', Amount = {amount} " +
-                               $"WHERE PaymentID = {selectedId};";
+                string query = "UPDATE PAYMENT SET " +
+                               "MemberID = @memberId, PlanID = @planId, " +
+                               "PaymentDate = @paymentDate, Amount = @amount " +
+                               "WHERE PaymentID = @id;";
 
                 DatabaseHelper db = new DatabaseHelper();
-                if (db.ExecuteAction(query))
+                if (db.ExecuteAction(query,
+                    new MySqlParameter("@memberId", memberId),
+                    new MySqlParameter("@planId", planId),
+                    new MySqlParameter("@paymentDate", paymentDate),
+                    new MySqlParameter("@amount", amount),
+                    new MySqlParameter("@id", selectedId)))
                 {
                     MessageBox.Show("Payment updated successfully!");
                     dgvPayments.DataSource = db.ExecuteSelect("SELECT * FROM PAYMENT;");
@@ -97,9 +108,9 @@ namespace GymMembershipSystem.Forms
 
                 if (result == DialogResult.Yes)
                 {
-                    string query = $"DELETE FROM PAYMENT WHERE PaymentID = {selectedId};";
+                    string query = "DELETE FROM PAYMENT WHERE PaymentID = @id;";
                     DatabaseHelper db = new DatabaseHelper();
-                    if (db.ExecuteAction(query))
+                    if (db.ExecuteAction(query, new MySqlParameter("@id", selectedId)))
                     {
                         MessageBox.Show("Payment deleted!");
                         dgvPayments.DataSource = db.ExecuteSelect("SELECT * FROM PAYMENT;");

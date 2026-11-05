@@ -1,4 +1,5 @@
 ﻿using GymMembershipSystem.DataAccess;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,7 @@ namespace GymMembershipSystem.Forms
         public RoomForm()
         {
             InitializeComponent();
+            UiTheme.Apply(this);
         }
 
         private void btnLoadRooms_Click(object sender, EventArgs e)
@@ -32,11 +34,14 @@ namespace GymMembershipSystem.Forms
             // Convert the NumericUpDown value to a string for the SQL query
             string capacity = nudCapacity.Value.ToString();
 
-            string query = $"INSERT INTO ROOM (RoomName, Activity, Capacity) " +
-                           $"VALUES ('{roomName}', '{activity}', {capacity});";
+            string query = "INSERT INTO ROOM (RoomName, Activity, Capacity) " +
+                           "VALUES (@roomName, @activity, @capacity);";
 
             DatabaseHelper db = new DatabaseHelper();
-            if (db.ExecuteAction(query))
+            if (db.ExecuteAction(query,
+                new MySqlParameter("@roomName", roomName),
+                new MySqlParameter("@activity", activity),
+                new MySqlParameter("@capacity", capacity)))
             {
                 MessageBox.Show("Room added successfully!");
                 dgvRooms.DataSource = db.ExecuteSelect("SELECT * FROM ROOM;");
@@ -70,12 +75,16 @@ namespace GymMembershipSystem.Forms
                 string activity = txtActivity.Text;
                 string capacity = nudCapacity.Value.ToString();
 
-                string query = $"UPDATE ROOM SET " +
-                               $"RoomName = '{roomName}', Activity = '{activity}', Capacity = {capacity} " +
-                               $"WHERE RoomID = {selectedId};";
+                string query = "UPDATE ROOM SET " +
+                               "RoomName = @roomName, Activity = @activity, Capacity = @capacity " +
+                               "WHERE RoomID = @id;";
 
                 DatabaseHelper db = new DatabaseHelper();
-                if (db.ExecuteAction(query))
+                if (db.ExecuteAction(query,
+                    new MySqlParameter("@roomName", roomName),
+                    new MySqlParameter("@activity", activity),
+                    new MySqlParameter("@capacity", capacity),
+                    new MySqlParameter("@id", selectedId)))
                 {
                     MessageBox.Show("Room updated successfully!");
                     dgvRooms.DataSource = db.ExecuteSelect("SELECT * FROM ROOM;");
@@ -93,9 +102,9 @@ namespace GymMembershipSystem.Forms
 
                 if (result == DialogResult.Yes)
                 {
-                    string query = $"DELETE FROM ROOM WHERE RoomID = {selectedId};";
+                    string query = "DELETE FROM ROOM WHERE RoomID = @id;";
                     DatabaseHelper db = new DatabaseHelper();
-                    if (db.ExecuteAction(query))
+                    if (db.ExecuteAction(query, new MySqlParameter("@id", selectedId)))
                     {
                         MessageBox.Show("Room deleted!");
                         dgvRooms.DataSource = db.ExecuteSelect("SELECT * FROM ROOM;");
@@ -111,4 +120,4 @@ namespace GymMembershipSystem.Forms
             nudCapacity.Value = nudCapacity.Minimum; 
         }
     }
-    }
+}

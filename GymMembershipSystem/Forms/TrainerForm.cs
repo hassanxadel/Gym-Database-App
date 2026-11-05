@@ -1,4 +1,5 @@
 ﻿using GymMembershipSystem.DataAccess;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,7 @@ namespace GymMembershipSystem.Forms
         public TrainerForm()
         {
             InitializeComponent();
+            UiTheme.Apply(this);
         }
 
         // LOAD DATA
@@ -43,9 +45,9 @@ namespace GymMembershipSystem.Forms
 
                 if (result == DialogResult.Yes)
                 {
-                    string query = $"DELETE FROM TRAINER WHERE TrainerID = {selectedId};";
+                    string query = "DELETE FROM TRAINER WHERE TrainerID = @id;";
                     DatabaseHelper db = new DatabaseHelper();
-                    if (db.ExecuteAction(query))
+                    if (db.ExecuteAction(query, new MySqlParameter("@id", selectedId)))
                     {
                         MessageBox.Show("Trainer deleted!");
                         dgvTrainers.DataSource = db.ExecuteSelect("SELECT * FROM TRAINER;");
@@ -76,11 +78,16 @@ namespace GymMembershipSystem.Forms
             string phone = txtPhone.Text;
             string level = cmbLevel.Text; // Getting the text from the dropdown
 
-            string query = $"INSERT INTO TRAINER (FName, LName, Email, Phone, Level) " +
-                           $"VALUES ('{fName}', '{lName}', '{email}', '{phone}', '{level}');";
+            string query = "INSERT INTO TRAINER (FName, LName, Email, Phone, Level) " +
+                           "VALUES (@fName, @lName, @email, @phone, @level);";
 
             DatabaseHelper db = new DatabaseHelper();
-            if (db.ExecuteAction(query))
+            if (db.ExecuteAction(query,
+                new MySqlParameter("@fName", fName),
+                new MySqlParameter("@lName", lName),
+                new MySqlParameter("@email", email),
+                new MySqlParameter("@phone", phone),
+                new MySqlParameter("@level", level)))
             {
                 MessageBox.Show("Trainer added successfully!");
                 dgvTrainers.DataSource = db.ExecuteSelect("SELECT * FROM TRAINER;");
@@ -101,13 +108,19 @@ namespace GymMembershipSystem.Forms
                 string phone = txtPhone.Text;
                 string level = cmbLevel.Text;
 
-                string query = $"UPDATE TRAINER SET " +
-                               $"FName = '{fName}', LName = '{lName}', Email = '{email}', " +
-                               $"Phone = '{phone}', Level = '{level}' " +
-                               $"WHERE TrainerID = {selectedId};";
+                string query = "UPDATE TRAINER SET " +
+                               "FName = @fName, LName = @lName, Email = @email, " +
+                               "Phone = @phone, Level = @level " +
+                               "WHERE TrainerID = @id;";
 
                 DatabaseHelper db = new DatabaseHelper();
-                if (db.ExecuteAction(query))
+                if (db.ExecuteAction(query,
+                    new MySqlParameter("@fName", fName),
+                    new MySqlParameter("@lName", lName),
+                    new MySqlParameter("@email", email),
+                    new MySqlParameter("@phone", phone),
+                    new MySqlParameter("@level", level),
+                    new MySqlParameter("@id", selectedId)))
                 {
                     MessageBox.Show("Trainer updated successfully!");
                     dgvTrainers.DataSource = db.ExecuteSelect("SELECT * FROM TRAINER;");

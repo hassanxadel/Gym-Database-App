@@ -193,7 +193,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dgvPlans);
             this.Name = "PlanFrom2";
-            this.Text = "PlanFrom2";
+            this.Text = "Manage Membership Plans";
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlans)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMonthlyFee)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDurationDays)).EndInit();

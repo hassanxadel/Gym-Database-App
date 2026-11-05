@@ -1,4 +1,5 @@
 ﻿using GymMembershipSystem.DataAccess;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,7 @@ namespace GymMembershipSystem.Forms
         public ClassForm()
         {
             InitializeComponent();
+            UiTheme.Apply(this);
             LoadReferenceLists();
         }
 
@@ -38,11 +40,18 @@ namespace GymMembershipSystem.Forms
             string startTime = dtpStartTime.Value.ToString("HH:mm:ss");
             string endTime = dtpEndTime.Value.ToString("HH:mm:ss");
 
-            string query = $"INSERT INTO CLASS (TrainerID, RoomID, ClassName, Description, ScheduleDay, StartTime, EndTime) " +
-                           $"VALUES ({trainerId}, {roomId}, '{className}', '{description}', '{scheduleDay}', '{startTime}', '{endTime}');";
+            string query = "INSERT INTO CLASS (TrainerID, RoomID, ClassName, Description, ScheduleDay, StartTime, EndTime) " +
+                           "VALUES (@trainerId, @roomId, @className, @description, @scheduleDay, @startTime, @endTime);";
 
             DatabaseHelper db = new DatabaseHelper();
-            if (db.ExecuteAction(query))
+            if (db.ExecuteAction(query,
+                new MySqlParameter("@trainerId", trainerId),
+                new MySqlParameter("@roomId", roomId),
+                new MySqlParameter("@className", className),
+                new MySqlParameter("@description", description),
+                new MySqlParameter("@scheduleDay", scheduleDay),
+                new MySqlParameter("@startTime", startTime),
+                new MySqlParameter("@endTime", endTime)))
             {
                 MessageBox.Show("Class added successfully!");
                 dgvClasses.DataSource = db.ExecuteSelect("SELECT * FROM CLASS;");
@@ -87,14 +96,22 @@ namespace GymMembershipSystem.Forms
                 string startTime = dtpStartTime.Value.ToString("HH:mm:ss");
                 string endTime = dtpEndTime.Value.ToString("HH:mm:ss");
 
-                string query = $"UPDATE CLASS SET " +
-                               $"TrainerID = {trainerId}, RoomID = {roomId}, ClassName = '{className}', " +
-                               $"Description = '{description}', ScheduleDay = '{scheduleDay}', " +
-                               $"StartTime = '{startTime}', EndTime = '{endTime}' " +
-                               $"WHERE ClassID = {selectedId};";
+                string query = "UPDATE CLASS SET " +
+                               "TrainerID = @trainerId, RoomID = @roomId, ClassName = @className, " +
+                               "Description = @description, ScheduleDay = @scheduleDay, " +
+                               "StartTime = @startTime, EndTime = @endTime " +
+                               "WHERE ClassID = @id;";
 
                 DatabaseHelper db = new DatabaseHelper();
-                if (db.ExecuteAction(query))
+                if (db.ExecuteAction(query,
+                    new MySqlParameter("@trainerId", trainerId),
+                    new MySqlParameter("@roomId", roomId),
+                    new MySqlParameter("@className", className),
+                    new MySqlParameter("@description", description),
+                    new MySqlParameter("@scheduleDay", scheduleDay),
+                    new MySqlParameter("@startTime", startTime),
+                    new MySqlParameter("@endTime", endTime),
+                    new MySqlParameter("@id", selectedId)))
                 {
                     MessageBox.Show("Class updated successfully!");
                     dgvClasses.DataSource = db.ExecuteSelect("SELECT * FROM CLASS;");
@@ -112,9 +129,9 @@ namespace GymMembershipSystem.Forms
 
                 if (result == DialogResult.Yes)
                 {
-                    string query = $"DELETE FROM CLASS WHERE ClassID = {selectedId};";
+                    string query = "DELETE FROM CLASS WHERE ClassID = @id;";
                     DatabaseHelper db = new DatabaseHelper();
-                    if (db.ExecuteAction(query))
+                    if (db.ExecuteAction(query, new MySqlParameter("@id", selectedId)))
                     {
                         MessageBox.Show("Class deleted!");
                         dgvClasses.DataSource = db.ExecuteSelect("SELECT * FROM CLASS;");
@@ -149,5 +166,4 @@ namespace GymMembershipSystem.Forms
             txtRoomID.Text = dgvRoomReference.Rows[e.RowIndex].Cells["RoomID"].Value.ToString();
         }
     }
-    }
-
+}

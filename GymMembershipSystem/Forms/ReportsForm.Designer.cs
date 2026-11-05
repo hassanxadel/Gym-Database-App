@@ -73,7 +73,7 @@
             this.Controls.Add(this.btnMemberHistory);
             this.Controls.Add(this.dgvReports);
             this.Name = "ReportsForm";
-            this.Text = "ReportsForm";
+            this.Text = "Reports";
             ((System.ComponentModel.ISupportInitialize)(this.dgvReports)).EndInit();
             this.ResumeLayout(false);
 

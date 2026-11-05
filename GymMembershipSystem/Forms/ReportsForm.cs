@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace GymMembershipSystem.Forms
 {
@@ -17,6 +16,7 @@ namespace GymMembershipSystem.Forms
         public ReportsForm()
         {
             InitializeComponent();
+            UiTheme.Apply(this);
         }
 
         private void btnMemberHistory_Click(object sender, EventArgs e)

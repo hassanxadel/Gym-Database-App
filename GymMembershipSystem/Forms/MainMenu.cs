@@ -15,6 +15,7 @@ namespace GymMembershipSystem.Forms
         public MainMenu()
         {
             InitializeComponent();
+            UiTheme.Apply(this);
         }
 private void btnManageMembers_Click(object sender, EventArgs e)
         {
@@ -70,8 +71,7 @@ private void btnManageMembers_Click(object sender, EventArgs e)
         {
             Forms.ReportsForm reportScreen = new Forms.ReportsForm();
             reportScreen.ShowDialog();
-
         }
     }
-    }
+}
 
