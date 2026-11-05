@@ -6,3 +6,6 @@
 
 # Contains a local MySQL password - copy App.config.example instead
 GymMembershipSystem/App.config
+
+# Local Claude Code permissions - machine/session specific, may contain local secrets
+.claude/settings.local.json
